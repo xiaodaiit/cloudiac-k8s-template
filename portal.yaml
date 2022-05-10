@@ -16,7 +16,7 @@ spec:
       enableServiceLinks: false   #禁止引用环境变量
       containers:
       - name: portal-test
-        image: registry.idcos.com/cloudiac/cloudiac/iac-portal:$VERSION
+        image: registry.idcos.com/cloudiac/iac-portal:v0.9.0
         ports:
         - containerPort: 9030
         - containerPort: 3307
