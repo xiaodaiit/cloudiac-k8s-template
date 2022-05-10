@@ -19,7 +19,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: consul
-          image: consul:latest
+          image: registry.idcos.com/cloudiac/consul:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8500

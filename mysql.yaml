@@ -15,7 +15,7 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: mysql:8.0
+      - image: registry.idcos.com/common/mysql:8.0
         name: mysql
         env:
           # Use secret in real usage
