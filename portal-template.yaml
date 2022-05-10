@@ -1,0 +1,52 @@
+# deployment 资源
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-test
+spec:
+  selector:
+    matchLabels:
+      app: portal-test
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: portal-test
+    spec:
+      enableServiceLinks: false   #禁止引用环境变量
+      containers:
+      - name: portal-test
+        image: cloudiac/iac-portal:$VERSION
+        ports:
+        - containerPort: 9030
+        - containerPort: 3307
+        volumeMounts:
+        - mountPath: /usr/yunji/cloudiac/.env
+          subPath: .env
+          name: env
+        - mountPath: /usr/yunji/cloudiac/config-portal.yml
+          subPath: config-portal.yml
+          name: config-portal
+      volumes:
+        - configMap:
+            name: env
+          name: env
+        - configMap:
+            name: config-portal
+          name: config-portal
+
+# service资源
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal-test
+spec:
+  type: NodePort      #这里代表是NodePort类型的
+  ports:
+  - port: 9030       #这里的端口和clusterIP对应，即ip:8080,供内部访问。
+    targetPort: 9030  #端口一定要和container暴露出来的端口对应
+    protocol: TCP
+    nodePort: 32100   # 所有的节点都会开放此端口，此端口供外部调用。
+  selector:
+    app: portal-test

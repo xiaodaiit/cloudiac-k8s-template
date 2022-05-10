@@ -1,0 +1,44 @@
+# deployment资源
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iac-web
+spec:
+  selector:
+    matchLabels:
+      app: iac-web
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: iac-web
+    spec:
+      containers:
+      - name: iac-web
+        image: cloudiac/iac-web:$VERSION
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d/iac.conf
+          subPath: iac.conf
+          name: iac-web
+      volumes:
+        - configMap:
+            name: iac-web
+          name: iac-web
+
+# service资源
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iac-web
+spec:
+  type: NodePort      #这里代表是NodePort类型的
+  ports:
+  - port: 80       #这里的端口和clusterIP对应，即ip:8080,供内部访问。
+    targetPort: 80  #端口一定要和container暴露出来的端口对应
+    protocol: TCP
+    nodePort: 32102   # 所有的节点都会开放此端口，此端口供外部调用。
+  selector:
+    app: iac-web
