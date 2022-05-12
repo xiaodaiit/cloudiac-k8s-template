@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: iac-web
-        image: registry.idcos.com/cloudiac/iac-web:0.9.0
+        image: registry.idcos.com/cloudiac/iac-web:$web_version
         ports:
         - containerPort: 80
         volumeMounts:
